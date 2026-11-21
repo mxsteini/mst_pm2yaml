@@ -2,7 +2,7 @@ import { expect, test, type FrameLocator, type Page } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 import {
-  BASE_YAML, DB_ONLY_FORM_UID, FIELD_TABLE, FILE_VALUE, FOLDER, FORM_TABLE, FORM_UID, PROJECT_ROOT,
+  BASE_YAML, DB_ONLY_FORM_UID, FIELD_TABLE, FILE_VALUE, FOLDER, FORM_TABLE, FORM_UID,
   fieldTitle, fieldUid, readYaml, resetFixture, sqlValue, writeYaml,
 } from '../helpers';
 
@@ -135,7 +135,8 @@ test.describe('Backend: Negativfälle', () => {
   test('versionierte Datei ist im Development-Kontext editierbar (Schreibschutz greift erst außerhalb)', async ({ page }) => {
     // Gegenprobe zur Sperre: in DDEV (Development) darf eine EXT-Datei geschrieben werden.
     // Die Sperre selbst (Production/Staging) prüfen die Unit-Tests (FileLocatorTest).
-    const extDir = path.join(PROJECT_ROOT, 'packages/mst_pm2yaml/Configuration/Powermail');
+    // Verzeichnis der Extension selbst (liegt je nach Projekt unter packages/ oder extensions/)
+    const extDir = path.resolve(__dirname, '../../../Configuration/Powermail');
     fs.mkdirSync(extDir, { recursive: true });
     try {
       writeYaml(BASE_YAML, path.join(extDir, 'e2e-versioniert.yaml'));

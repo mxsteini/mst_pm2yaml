@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
     Unit-Tests für mst_pm2yaml (ohne Datenbank):
-        ddev exec vendor/bin/phpunit -c packages/mst_pm2yaml/Tests/phpunit.xml
+        ddev exec vendor/bin/phpunit -c <extension>/Tests/phpunit.xml   (<extension> = packages/mst_pm2yaml oder extensions/mst_pm2yaml)
 -->
 <phpunit
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

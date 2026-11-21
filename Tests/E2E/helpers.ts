@@ -2,7 +2,27 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
-export const PROJECT_ROOT = path.resolve(__dirname, '../../../..');
+/**
+ * DDEV-Projekt, gegen das getestet wird.
+ *   E2E_PROJECT_ROOT=/pfad/zum/ddev-projekt  (Verzeichnis mit .ddev/config.yaml)
+ * Ohne Angabe wird ab dem Extension-Verzeichnis nach oben das erste Verzeichnis mit .ddev/config.yaml gesucht
+ * (passt, wenn die Extension unter packages/ des Projekts liegt).
+ */
+function findProjectRoot(): string {
+  if (process.env.E2E_PROJECT_ROOT) {
+    return path.resolve(process.env.E2E_PROJECT_ROOT);
+  }
+  let dir = __dirname;
+  while (dir !== path.dirname(dir)) {
+    if (fs.existsSync(path.join(dir, '.ddev', 'config.yaml'))) {
+      return dir;
+    }
+    dir = path.dirname(dir);
+  }
+  throw new Error('Kein DDEV-Projekt gefunden, bitte E2E_PROJECT_ROOT setzen.');
+}
+
+export const PROJECT_ROOT = findProjectRoot();
 export const FOLDER = path.join(PROJECT_ROOT, 'public/fileadmin/_Powermail');
 export const FILE_VALUE = 'fileadmin/_Powermail/e2e-pm2yaml.yaml';
 export const FILE_PATH = path.join(PROJECT_ROOT, 'public', FILE_VALUE);
@@ -18,6 +38,15 @@ export const FIELD_TABLE = 'tx_powermail_domain_model_field';
 
 export function ddev(args: string[]): string {
   return execFileSync('ddev', args, { cwd: PROJECT_ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+}
+
+/** Haupt-URL des DDEV-Projekts (E2E_BASE_URL überschreibt) */
+export function baseUrl(): string {
+  if (process.env.E2E_BASE_URL) {
+    return process.env.E2E_BASE_URL;
+  }
+  const info = JSON.parse(ddev(['describe', '-j']));
+  return info.raw.primary_url;
 }
 
 export function sql(query: string): string {
