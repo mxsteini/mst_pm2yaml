@@ -1,0 +1,11 @@
+categories:
+  mstPm2yaml:
+    label: 'Powermail ↔ YAML'
+
+settings:
+  mstPm2yaml.folder:
+    label: 'Ordner für YAML-Dateien'
+    description: 'Relativ zum public-Verzeichnis, z. B. fileadmin/_Powermail/. Leer: Wert aus der Extension-Konfiguration. Formulare aus diesem Ordner sind immer editierbar.'
+    category: mstPm2yaml
+    type: string
+    default: ''

@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    # Hooks, FormEngine-Provider, -Nodes und itemsProcFunc werden per GeneralUtility::makeInstance geholt
+    public: true
+
+  MSTITB\MstPm2yaml\:
+    resource: '../Classes/*'

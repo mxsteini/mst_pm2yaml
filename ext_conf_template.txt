@@ -1,0 +1,2 @@
+# cat=basic; type=string; label=Ordner für YAML-Dateien (Fallback): Relativ zum public-Verzeichnis. Gilt, wenn die Site des Formulars im Site-Set (mstPm2yaml.folder) keinen Ordner setzt oder das Formular außerhalb jeder Site liegt. Formulare aus diesem Ordner sind immer editierbar.
+folder = fileadmin/_Powermail/
