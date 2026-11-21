@@ -1,68 +1,68 @@
-# YAML-Format
+# YAML format
 
-## Aufbau
+## Structure
 
 ```yaml
-title: 'Bewerbung für die Testphase'
+title: 'Application for the test phase'
 pages:
-  deine-angaben:              # Bezeichner der Seite
-    title: 'Deine Angaben'
+  your-details:               # identifier of the page
+    title: 'Your details'
     fields:
-      app:                    # Marker des Feldes
+      app:                    # marker of the field
         type: radio
-        title: 'Für welche App bewirbst du dich?'
+        title: 'Which app are you applying for?'
         settings: |-
           Octavo Sheets
           Octavo Train
         mandatory: 1
-      absenden:
+      submit:
         type: submit
-        title: 'Absenden'
+        title: 'Send'
 localizations:
-  1:                          # Sprach-ID der Site
-    title: 'Application for the test phase'
+  1:                          # language id of the site
+    title: 'Bewerbung für die Testphase'
     pages:
-      deine-angaben:
-        title: 'Your details'
+      your-details:
+        title: 'Deine Angaben'
     fields:
       app:
-        title: 'Which app are you applying for?'
+        title: 'Für welche App bewirbst du dich?'
 ```
 
-| Schlüssel | Bedeutung |
+| Key | Meaning |
 |---|---|
-| Spalten des Formulars (`title`, …) | Eigenschaften des Formulars in der Standardsprache |
-| `pages` | Seiten, Schlüssel ist der **Bezeichner** |
-| `pages.<bezeichner>.fields` | Felder der Seite, Schlüssel ist der **Marker** |
-| `localizations.<sprach-id>` | Abweichungen für eine Sprache |
+| columns of the form (`title`, …) | properties of the form in the default language |
+| `pages` | pages, the key is the **identifier** |
+| `pages.<identifier>.fields` | fields of the page, the key is the **marker** |
+| `localizations.<language-id>` | deviations for one language |
 
-## Eigenschaften
+## Properties
 
-- Eigenschaften sind die **Spalten der Powermail-Tabellen**, auch aus anderen Extensions
-  (z. B. `powermail_cond`). `type: input` entspricht der Spalte `type` am Feld.
-- **Standardwerte fehlen.** Was nicht in der Datei steht, hat den Standardwert der Datenbankspalte.
-- Mehrzeilige Werte (z. B. `settings` bei Auswahlfeldern) schreibst du als Text mit `|`. Listen sind als Wert nicht
-  erlaubt.
-- Eine **unbekannte Eigenschaft** (z. B. ein Tippfehler wie `lable`) ist ein Fehler.
+- Properties are the **columns of the Powermail tables**, including those added by other extensions
+  (for example `powermail_cond`). `type: input` corresponds to the column `type` of the field.
+- **Default values are omitted.** Whatever is not in the file has the default value of the database column.
+- Write multi-line values (for example `settings` of selection fields) as text with `|`. Lists are not allowed as
+  a value.
+- An **unknown property** (for example a typo such as `lable`) is an error.
 
-## Zuordnung
+## Matching
 
-- **Seiten** werden über den Bezeichner zugeordnet. Er steht im Backend im Feld *Bezeichner in der YAML-Datei*
-  und darf `A–Z`, `a–z`, `0–9`, `_` und `-` enthalten.
-- **Felder** werden formularweit über den **Marker** zugeordnet (`a–z`, `0–9`, `_`). Der Marker ist im Formular
-  eindeutig und das Feld braucht einen `type`.
-- Zugeordnete Datensätze **behalten ihre uid**. Gespeicherte Mails zeigen also weiter auf ihre Felder.
-- Was nicht mehr in der Datei steht, wird gelöscht (`deleted = 1`), Übersetzungen eingeschlossen.
+- **Pages** are matched by the identifier. It is shown in the backend in the field *Bezeichner in der YAML-Datei*
+  (identifier in the YAML file) and may contain `A–Z`, `a–z`, `0–9`, `_` and `-`.
+- **Fields** are matched form-wide by the **marker** (`a–z`, `0–9`, `_`). The marker is unique within the form and
+  the field needs a `type`.
+- Matched records **keep their uid**, so stored mails keep pointing to their fields.
+- Whatever is no longer in the file is deleted (`deleted = 1`), translations included.
 
-## Übersetzungen
+## Translations
 
-- `localizations` ist nach **Sprach-ID der Site** geschlüsselt (größer als 0).
-- Übersetzungen enthalten **nur Abweichungen** von der Standardsprache.
-- Jede Sprache in `localizations` bekommt alle Seiten und Felder, auch solche ohne eigene Abweichung.
-- Verweist eine Übersetzung auf eine unbekannte Seite oder ein unbekanntes Feld, ist das ein Fehler.
+- `localizations` is keyed by the **language id of the site** (greater than 0).
+- Translations contain **only deviations** from the default language.
+- Every language in `localizations` gets all pages and fields, including those without a deviation of their own.
+- If a translation refers to an unknown page or field, that is an error.
 
-## Alles oder nichts
+## All or nothing
 
-Eine Datei wird **vollständig geprüft, bevor** etwas in die Datenbank geschrieben wird. Ist ein Marker ungültig,
-fehlt ein `type` oder steht eine unbekannte Eigenschaft in der Datei, wird **nichts** übernommen. Die Datenbank
-behält den letzten gültigen Stand, die Fehlermeldung nennt Seite, Feld und Grund.
+A file is **completely validated before** anything is written to the database. If a marker is invalid, a `type` is
+missing or an unknown property occurs, **nothing** is imported. The database keeps the last valid state, and the
+error message names page, field and reason.

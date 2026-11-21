@@ -1,46 +1,45 @@
-# Fehlersuche
+# Troubleshooting
 
-## Eine Änderung in der Datei kommt nicht an
+## A change in the file does not arrive
 
-- Ist das Formular mit der Datei **verknüpft**? Im Formular muss unter *YAML-Datei* die Datei stehen, nicht
-  „nur Datenbank“.
-- Der Abgleich beim Anzeigen läuft nur, wenn sich die **Änderungszeit** der Datei geändert hat. Wurde die Datei
-  zweimal in derselben Sekunde geändert, hilft `vendor/bin/typo3 pm2yaml:sync --form=<uid>`.
-- Die Datei ist **fehlerhaft**. Fehler werden geloggt (Komponente `MSTITB.MstPm2yaml`, Level `error`),
-  Powermail arbeitet dann mit dem Stand der Datenbank. Eine fehlerhafte Datei wird bei jedem Aufruf erneut
-  versucht, bis sie korrigiert ist.
+- Is the form **linked** to the file? The field *YAML-Datei* must contain the file, not "nur Datenbank"
+  (database only).
+- The synchronization on display only runs if the **modification time** of the file changed. If the file was
+  changed twice within the same second, run `vendor/bin/typo3 pm2yaml:sync --form=<uid>`.
+- The file is **invalid**. Errors are logged (component `MSTITB.MstPm2yaml`, level `error`), and Powermail keeps
+  working with the state of the database. An invalid file is retried on every request until it is fixed.
 
 ```bash
 vendor/bin/typo3 pm2yaml:sync --form=12 --dry-run
 ```
 
-## Typische Fehlermeldungen
+## Typical error messages
 
-| Meldung | Ursache |
+The messages are in German. They are quoted verbatim with their meaning.
+
+| Message | Cause |
 |---|---|
-| `Ungültiger Marker "…" (erlaubt: a-z, 0-9 und _)` | Marker mit Großbuchstaben, Bindestrich oder Leerzeichen |
-| `Ungültiger Seiten-Bezeichner "…"` | Bezeichner enthält andere Zeichen als `A–Z a–z 0–9 _ -` |
-| `Marker "…" kommt mehrfach vor` | Ein Marker ist im Formular nur einmal erlaubt, auch über Seiten hinweg |
-| `Feld "…" hat keinen type` | Pflichtangabe `type` fehlt |
-| `unbekannte Eigenschaft "…"` | Tippfehler oder Spalte existiert nicht in den Powermail-Tabellen |
-| `Zuordnung (Schlüssel: Wert) erwartet` | Eine Eigenschaft hat eine Liste statt eines Werts |
-| `Listen sind als Wert nicht erlaubt, mehrzeilige Werte bitte als Text (\|) angeben` | Mehrzeilige Werte mit `\|` schreiben |
-| `unbekannte Seite "…"` / `unbekanntes Feld "…"` | Übersetzung verweist auf etwas, das in der Standardsprache fehlt |
-| `Sprache "…" in localizations muss eine Sprach-ID > 0 sein` | Sprach-ID 0 ist die Standardsprache |
-| `Formular … ist eine Übersetzung` | Es muss das Formular der Standardsprache verknüpft werden |
+| `Ungültiger Marker "…" (erlaubt: a-z, 0-9 und _)` | Invalid marker: upper case letters, hyphen or spaces |
+| `Ungültiger Seiten-Bezeichner "…"` | Page identifier contains characters other than `A–Z a–z 0–9 _ -` |
+| `Marker "…" kommt mehrfach vor` | A marker may occur only once per form, across pages as well |
+| `Feld "…" hat keinen type` | The required `type` is missing |
+| `unbekannte Eigenschaft "…"` | Typo, or the column does not exist in the Powermail tables |
+| `Zuordnung (Schlüssel: Wert) erwartet` | A property has a list instead of a value |
+| `Listen sind als Wert nicht erlaubt, mehrzeilige Werte bitte als Text (\|) angeben` | Write multi-line values with `\|` |
+| `unbekannte Seite "…"` / `unbekanntes Feld "…"` | A translation refers to something missing in the default language |
+| `Sprache "…" in localizations muss eine Sprach-ID > 0 sein` | Language id 0 is the default language |
+| `Formular … ist eine Übersetzung` | The form of the default language has to be linked |
 
-## Das Formular ist im Backend gesperrt
+## The form is locked in the backend
 
-Das Formular ist mit einer **versionierten** Datei verknüpft und die Umgebung ist nicht `Development`
-(oder die Extension liegt unter `vendor/`). Änderungen gehören in die Datei. Zum Lösen der Verknüpfung
-*YAML-Datei* auf „nur Datenbank“ stellen.
+The form is linked to a **versioned** file and the environment is not `Development` (or the extension is located
+below `vendor/`). Changes belong into the file. To remove the link, set *YAML-Datei* to "nur Datenbank".
 
-## Der Export-Button fehlt
+## The export button is missing
 
-Der Button erscheint nur bei Formularen **ohne** Verknüpfung.
+The button only appears for forms **without** a link.
 
-## Die Datei ist per HTTP abrufbar
+## The file is accessible via HTTP
 
-Die Extension legt die `.htaccess` nur für Apache an. Bei Nginx den Ordner (Standard
-`public/fileadmin/_Powermail/`) mit einer `location`-Regel sperren oder die Dateien außerhalb von `public/`
-ablegen.
+The extension only creates the `.htaccess` for Apache. With Nginx, block the folder (default
+`public/fileadmin/_Powermail/`) with a `location` rule, or store the files outside of `public/`.

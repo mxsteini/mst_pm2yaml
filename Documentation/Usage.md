@@ -1,57 +1,56 @@
-# Verwendung
+# Usage
 
-## Datei auswählen
+## Selecting a file
 
-Am Formular gibt es das Feld **YAML-Datei**. Zur Auswahl stehen
+The form has a field **YAML-Datei** (YAML file). The choices are
 
-- alle Dateien `Configuration/Powermail/*.yaml` aller aktiven Extensions (**versioniert**),
-- alle `*.yaml` und `*.yml` im Ordner der Site (**nicht versioniert**, Standard `fileadmin/_Powermail/`),
-- **– nur Datenbank –**: keine Verknüpfung, Powermail arbeitet wie bisher.
+- all files `Configuration/Powermail/*.yaml` of all active extensions (**versioned**),
+- all `*.yaml` and `*.yml` files in the site folder (**not versioned**, default `fileadmin/_Powermail/`),
+- **– nur Datenbank –** (database only): no link, Powermail works as before.
 
-Mit der Auswahl wird der Inhalt der Datei in die Datenbank übernommen, **die Datei gewinnt**.
+Selecting a file imports its content into the database, **the file wins**.
 
-## Ein bestehendes Formular in eine Datei überführen
+## Moving an existing form into a file
 
-Im Backend: Formular ohne Datei öffnen und neben dem Feld **YAML-Datei** auf den Export-Button klicken. Das
-Formular wird in den Ordner der Site geschrieben (Dateiname aus dem Titel, bei Kollisionen `-2`, `-3` …) und
-verknüpft.
+In the backend: open a form without a file and click the export button next to the field **YAML-Datei**. The form
+is written to the site folder (file name derived from the title, `-2`, `-3` … on collisions) and linked.
 
-Auf der Kommandozeile, auch für versionierte Dateien in einer Extension:
+On the command line, also for versioned files inside an extension:
 
 ```bash
-vendor/bin/typo3 pm2yaml:export 12 --file=EXT:mein_sitepackage/Configuration/Powermail/kontakt.yaml
+vendor/bin/typo3 pm2yaml:export 12 --file=EXT:my_sitepackage/Configuration/Powermail/contact.yaml
 ```
 
-## Im Alltag
+## Everyday work
 
-| Aktion | Wirkung |
+| Action | Effect |
 |---|---|
-| Datei im Editor ändern, Seite im Frontend aufrufen | Datei wird übernommen, wenn sich ihre Änderungszeit geändert hat. |
-| Feld, Seite oder Formular im Backend speichern | Die Datei wird neu geschrieben (nur Live-Workspace, nur wenn schreibbar). Eine Meldung bestätigt das. |
-| Plugin, Formular, Seite oder Feld im Backend öffnen | Vorher wird eine geänderte Datei übernommen. Das Formular zeigt also den Stand der Datei. |
-| Entwurf in einem Workspace speichern | Die Datei bleibt unverändert, erst das Veröffentlichen schreibt sie. |
-| Feld in der Datei umbenennen (Marker ändern) | Es ist ein **neues** Feld. Das alte wird gelöscht, gespeicherte Mails zeigen weiter auf das alte. |
+| Edit the file in your editor, open the page in the frontend | The file is imported if its modification time changed. |
+| Save a field, page or form in the backend | The file is rewritten (live workspace only, only if writable). A message confirms it. |
+| Open a plugin, form, page or field in the backend | A changed file is imported first, so the form always shows the state of the file. |
+| Save a draft in a workspace | The file stays untouched, publishing writes it. |
+| Rename a field in the file (change the marker) | It is a **new** field. The old one is deleted, stored mails keep pointing to the old one. |
 
-## Versionierte Formulare und Schreibschutz
+## Versioned forms and write protection
 
-Eine Datei unter `EXT:…/Configuration/Powermail/` ist **schreibgeschützt**, sobald
+A file below `EXT:…/Configuration/Powermail/` is **read-only** as soon as
 
-- der Kontext nicht `Development` ist (Staging, Production), oder
-- die Extension unter `vendor/` liegt oder das Verzeichnis nicht beschreibbar ist.
+- the context is not `Development` (staging, production), or
+- the extension is located below `vendor/` or the directory is not writable.
 
-Ein schreibgeschütztes Formular lässt im Backend nur noch die Dateiauswahl zu („nur Datenbank“ hebt die
-Verknüpfung auf). Das Ändern, Anlegen, Löschen, Verschieben und Übersetzen von Seiten und Feldern wird abgelehnt.
-Änderungen gehören in die Datei und damit ins Repository.
+A read-only form only allows changing the file selection in the backend ("database only" removes the link).
+Changing, creating, deleting, moving and translating pages and fields is rejected. Changes belong into the file
+and therefore into the repository.
 
-Dateien im Ordner der Site sind **immer** editierbar.
+Files in the site folder are **always** editable.
 
 ## Deployment
 
-Versionierte Dateien gehen zusammen mit dem Code live. Damit die Datenbank sie übernimmt, ruft das Deployment auf:
+Versioned files go live together with the code. To make the database pick them up, the deployment runs:
 
 ```bash
 vendor/bin/typo3 pm2yaml:sync --only-locked
 ```
 
-`--only-locked` beschränkt den Lauf auf versionierte, dort schreibgeschützte Formulare. Mit `--dry-run` wird nur
-geprüft. Nach einem Rollback der Dateien bei Bedarf von Hand ausführen.
+`--only-locked` restricts the run to versioned forms that are read-only in that environment. With `--dry-run`
+nothing is saved, the files are only checked. After rolling back the files, run it by hand if needed.

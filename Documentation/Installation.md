@@ -1,54 +1,55 @@
 # Installation
 
-## Voraussetzungen
+## Requirements
 
-- TYPO3 13.4, PHP 8.2 bis 8.5
+- TYPO3 13.4, PHP 8.2 to 8.5
 - Powermail 13 (`in2code/powermail`)
-- Composer-Installation (die Extension ist für Composer-Projekte gedacht)
+- A Composer-based installation
 
-## Schritte
+## Steps
 
-1. **Extension installieren**
+1. **Install the extension**
 
    ```bash
    composer require mstitb/mst-pm2yaml
    ```
 
-2. **Datenbankschema aktualisieren.** Die Extension ergänzt drei Spalten:
+2. **Update the database schema.** The extension adds three columns:
 
-   | Tabelle | Spalte | Zweck |
+   | Table | Column | Purpose |
    |---|---|---|
-   | `tx_powermail_domain_model_form` | `tx_mstpm2yaml_file` | gewählte YAML-Datei |
-   | `tx_powermail_domain_model_form` | `tx_mstpm2yaml_synced` | Änderungszeit der Datei beim letzten Abgleich |
-   | `tx_powermail_domain_model_page` | `tx_mstpm2yaml_identifier` | Bezeichner der Seite in der Datei |
+   | `tx_powermail_domain_model_form` | `tx_mstpm2yaml_file` | selected YAML file |
+   | `tx_powermail_domain_model_form` | `tx_mstpm2yaml_synced` | modification time of the file at the last synchronization |
+   | `tx_powermail_domain_model_page` | `tx_mstpm2yaml_identifier` | identifier of the page in the file |
 
    ```bash
    vendor/bin/typo3 extension:setup
    vendor/bin/typo3 database:updateschema
    ```
 
-3. **Site-Set einbinden (optional).** Nur nötig, wenn eine Site einen eigenen Ordner für die Dateien bekommen
-   soll. In der `config.yaml` der Site:
+3. **Include the site set (optional).** Only needed if a site should get its own folder for the files. In the
+   `config.yaml` of the site:
 
    ```yaml
    dependencies:
      - mstitb/mst-pm2yaml
    ```
 
-   Danach steht im Site-Einstellungs-Editor die Einstellung `mstPm2yaml.folder` bereit
-   (siehe [Konfiguration](Configuration.md)).
+   The setting `mstPm2yaml.folder` is then available in the site settings editor
+   (see [Configuration](Configuration.md)).
 
-4. **Cache leeren.**
+4. **Flush the caches.**
 
    ```bash
    vendor/bin/typo3 cache:flush
    ```
 
-## Prüfen
+## Verify
 
-Am Powermail-Formular erscheint nach dem Titel das Feld **YAML-Datei**. Ohne Auswahl bleibt alles wie bisher.
+After the title, the Powermail form shows the field **YAML-Datei** (YAML file). Without a selection everything
+works as before.
 
 > [!NOTE]
-> Liegt der Ordner für die Dateien unter `public/` (Standard: `public/fileadmin/_Powermail/`), legt die Extension
-> dort beim ersten Schreiben automatisch eine `.htaccess` mit `Require all denied` an. YAML-Dateien sind damit
-> nicht per HTTP abrufbar. Bei Nginx musst du den Ordner selbst sperren.
+> If the folder for the files is located below `public/` (default: `public/fileadmin/_Powermail/`), the extension
+> creates a `.htaccess` containing `Require all denied` when it first writes there. YAML files are then not
+> accessible via HTTP. With Nginx you have to block the folder yourself.

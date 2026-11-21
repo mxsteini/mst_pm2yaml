@@ -1,47 +1,51 @@
-# mst_pm2yaml – Powermail-Formulare als YAML-Datei
+# mst_pm2yaml – Powermail forms as YAML files
 
-Ein Powermail-Formular – Formular, Seiten, Felder und Übersetzungen – lebt in einer **YAML-Datei**. Die Extension
-hält Datei und Datenbank synchron. **Powermail selbst bleibt unverändert**: Es liest wie immer aus der Datenbank,
-gespeicherte Mails zeigen weiter auf ihre Felder.
+A Powermail form – form, pages, fields and translations – lives in a **YAML file**. The extension keeps file and
+database in sync. **Powermail itself stays untouched**: it reads from the database as always, and stored mails
+keep pointing to their fields.
 
 ```yaml
-title: 'Kontakt'
+title: 'Contact'
 pages:
-  angaben:
-    title: 'Deine Angaben'
+  details:
+    title: 'Your details'
     fields:
-      vorname:
+      firstname:
         type: input
-        title: 'Vorname'
+        title: 'First name'
         mandatory: 1
-      absenden:
+      submit:
         type: submit
-        title: 'Absenden'
+        title: 'Send'
 ```
 
-## Was du damit gewinnst
+## What you gain
 
-- **Formulare im Code-Repository**: Formulare werden mit dem Projekt committet, reviewt und deployt wie jeder andere
-  Code. Kein Abgleich von Datenbank-Dumps zwischen Entwicklung und Live.
-- **Eine Datei statt Klickstrecke**: Felder umsortieren, Pflichtfelder setzen oder Übersetzungen ergänzen geht im
-  Editor und per Diff nachvollziehbar.
-- **Backend funktioniert weiter**: Wer im Backend speichert, schreibt die Datei zurück.
-- **Stabile Datensätze**: Felder werden über ihren Marker zugeordnet und behalten ihre uid.
-- **Sicher im Betrieb**: Versionierte Formulare sind auf Live schreibgeschützt, Fehler in der Datei werden
-  geloggt, das Frontend bleibt erreichbar.
+- **Forms in your code repository**: forms are committed, reviewed and deployed like any other code. No more
+  syncing database dumps between development and live.
+- **One file instead of a click-through**: reorder fields, set mandatory flags or add translations in your editor,
+  with a readable diff.
+- **The backend keeps working**: saving in the backend writes the file back.
+- **Stable records**: fields are matched by their marker and keep their uid.
+- **Safe in production**: versioned forms are read-only on live, errors in a file are logged, and the frontend
+  stays available.
 
-## Auf einen Blick
+## At a glance
 
 | | |
 |---|---|
-| Extension-Key | `mst_pm2yaml` |
+| Extension key | `mst_pm2yaml` |
 | Composer | `mstitb/mst-pm2yaml` |
 | TYPO3 | 13.4 |
 | Powermail | 13.x (`in2code/powermail`) |
-| PHP | 8.2 bis 8.5 |
-| Quelltext | <https://github.com/mxsteini/mst_pm2yaml> |
+| PHP | 8.2 to 8.5 |
+| Source | <https://github.com/mxsteini/mst_pm2yaml> |
 
-## Inhalt
+> [!NOTE]
+> The backend user interface of the extension is currently in German (for example the field **YAML-Datei**).
+> This documentation names the German label and explains it where it first appears.
+
+## Contents
 
 ```{toctree}
 :maxdepth: 2

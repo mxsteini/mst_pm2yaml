@@ -1,20 +1,20 @@
-# Tests
+# Testing
 
-Die Extension bringt zwei Testebenen mit.
+The extension ships with two levels of tests.
 
-| Ebene | Werkzeug | Datenbank | Umfang |
+| Level | Tool | Database | Scope |
 |---|---|---|---|
-| Unit | PHPUnit 11, TYPO3 Testing Framework | nein | Spalten, Ordner, Dateipfade und Schreibschutz, Import, Export |
-| E2E | Playwright (Chrome) | ja, laufende DDEV-Instanz | Backend (Auswahl, Speichern, Export) und Frontend (Anzeigen, Absenden) inklusive Negativfälle |
+| Unit | PHPUnit 11, TYPO3 Testing Framework | no | columns, folders, file paths and write protection, import, export |
+| E2E | Playwright (Chrome) | yes, running DDEV instance | backend (selection, saving, export) and frontend (display, submit), including negative cases |
 
-## Voraussetzungen im Projekt
+## Requirements in the project
 
 ```bash
 composer require --dev typo3/testing-framework:^9 phpunit/phpunit:^11.5
 ```
 
-Der Test-Namespace muss im **Root**-`composer.json` des Projekts autoloadbar sein (Composer ignoriert
-`autoload-dev` von Abhängigkeiten):
+The test namespace has to be autoloadable from the **root** `composer.json` of the project (Composer ignores
+`autoload-dev` of dependencies):
 
 ```json
 "autoload-dev": {
@@ -24,61 +24,61 @@ Der Test-Namespace muss im **Root**-`composer.json` des Projekts autoloadbar sei
 }
 ```
 
-Für die E2E-Tests braucht die DDEV-Instanz
+For the E2E tests the DDEV instance needs
 
-- den **Development-Kontext** (`TYPO3_CONTEXT=Development/DDEV`),
-- einen **Auto-Login** im Backend (`undkonsorten/typo3-auto-login`, ab 2.3 mit PHP 8.5 kompatibel,
-  `TYPO3_AUTOLOGIN_USERNAME` zeigt auf einen Admin),
-- eine Site mit **Root-Seite 1** und das Powermail-Set (`in2code/powermail-main`),
-- **Mailpit** (in DDEV enthalten) für die Prüfung des Mailversands,
-- Google Chrome auf dem Rechner (`E2E_CHANNEL` wählt einen anderen Browser).
+- the **Development context** (`TYPO3_CONTEXT=Development/DDEV`),
+- a backend **auto login** (`undkonsorten/typo3-auto-login`, compatible with PHP 8.5 from 2.3 on;
+  `TYPO3_AUTOLOGIN_USERNAME` points to an admin user),
+- a site with **root page 1** and the Powermail set (`in2code/powermail-main`),
+- **Mailpit** (part of DDEV) to verify that mails are sent,
+- Google Chrome on the machine (`E2E_CHANNEL` selects another browser).
 
-## Unit-Tests
+## Unit tests
 
 ```bash
 ddev exec vendor/bin/phpunit -c <extension>/Tests/phpunit.xml
 ```
 
-`<extension>` ist das Verzeichnis der Extension im Projekt, z. B. `packages/mst_pm2yaml` oder
+`<extension>` is the directory of the extension in the project, for example `packages/mst_pm2yaml` or
 `extensions/mst_pm2yaml`.
 
-## E2E-Tests
+## E2E tests
 
 ```bash
 cd <extension>/Tests/E2E
 npm ci
-E2E_PROJECT_ROOT=/pfad/zum/ddev-projekt npx playwright test
+E2E_PROJECT_ROOT=/path/to/ddev-project npx playwright test
 ```
 
-| Variable | Bedeutung |
+| Variable | Meaning |
 |---|---|
-| `E2E_PROJECT_ROOT` | Verzeichnis des DDEV-Projekts (mit `.ddev/config.yaml`). Ohne Angabe wird ab der Extension nach oben gesucht, das passt für `packages/mst_pm2yaml`. |
-| `E2E_BASE_URL` | Basis-URL. Ohne Angabe die primäre URL aus `ddev describe`. |
-| `E2E_CHANNEL` | Browser-Kanal, Standard `chrome` |
-| `E2E_KEEP_FIXTURE` | `1` lässt Testdaten nach dem Lauf stehen |
+| `E2E_PROJECT_ROOT` | Directory of the DDEV project (containing `.ddev/config.yaml`). Without it, the tests search upwards from the extension, which works for `packages/mst_pm2yaml`. |
+| `E2E_BASE_URL` | Base URL. Without it, the primary URL from `ddev describe`. |
+| `E2E_CHANNEL` | Browser channel, default `chrome` |
+| `E2E_KEEP_FIXTURE` | `1` keeps the test data after the run |
 
-Im Repository der Extensions gibt es zusätzlich `npm run test:v13` (Projekt `v13` neben dem Extension-Ordner).
+In the extensions repository there is additionally `npm run test:v13` (project `v13` next to the extension folder).
 
-### Was die Tests anlegen
+### What the tests create
 
-Die Tests legen eine eigene Seite `/e2e-pm2yaml` mit zwei Formularen und einem Plugin an (uids ab 9001, Dateien
-`fileadmin/_Powermail/e2e-*.yaml`) und räumen alles danach wieder ab. Sie teilen sich diese Daten und laufen
-deshalb mit einem Worker.
+The tests create their own page `/e2e-pm2yaml` with two forms and a plugin (uids from 9001, files
+`fileadmin/_Powermail/e2e-*.yaml`) and remove everything afterwards. They share this data and therefore run with a
+single worker.
 
 > [!WARNING]
-> Die E2E-Tests schreiben in die Datenbank des Projekts. Nur gegen Entwicklungs-Instanzen laufen lassen.
+> The E2E tests write to the database of the project. Run them against development instances only.
 
-### Grenzen
+### Limits
 
-- Der Schreibschutz außerhalb von `Development` ist nur per Unit-Test abgedeckt, weil DDEV im
-  Development-Kontext läuft.
-- Die Änderungszeit einer Datei hat Sekundenauflösung. Wird eine Datei zweimal in derselben Sekunde geändert,
-  nachdem dazwischen schon abgeglichen wurde, bemerkt der Abgleich beim Anzeigen die zweite Änderung nicht.
-  `pm2yaml:sync` übernimmt sie trotzdem.
+- Write protection outside of `Development` is only covered by unit tests, because DDEV runs in the Development
+  context.
+- The modification time of a file has a resolution of one second. If a file is changed twice within the same
+  second after a synchronization in between, the synchronization on display does not notice the second change.
+  `pm2yaml:sync` picks it up anyway.
 
-## Getestete Umgebungen
+## Tested environments
 
-| TYPO3 | Powermail | PHP | Ergebnis |
+| TYPO3 | Powermail | PHP | Result |
 |---|---|---|---|
-| 13.4 | 13.3 | 8.2 | Unit und E2E grün |
-| 13.4 | 13.3 | 8.5 | Unit und E2E grün |
+| 13.4 | 13.3 | 8.2 | unit and E2E green |
+| 13.4 | 13.3 | 8.5 | unit and E2E green |
