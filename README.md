@@ -1,9 +1,5 @@
 # mst_pm2yaml – Powermail forms as YAML files
 
-> [!WARNING]
-> **This extension is no longer supported.** `mst_pm2yaml` is not maintained any more: there will be no further
-> features, bug fixes or compatibility updates. Use it at your own risk and consider a fork if you still depend on it.
-
 A Powermail form (form, pages, fields, translations) is synchronized with a YAML file. Powermail itself stays
 untouched: it reads from the database as always, the extension keeps file and database in sync. The file contains
 no uids.
