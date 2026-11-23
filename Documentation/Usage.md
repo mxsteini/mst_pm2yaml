@@ -10,9 +10,11 @@ The form has a field **YAML-Datei** (YAML file). The choices are
 
 Selecting a file imports its content into the database, **the file wins**.
 
+![Powermail form with the YAML file selector and the export button](Images/form-file-selector.png)
+
 ## Moving an existing form into a file
 
-In the backend: open a form without a file and click the export button next to the field **YAML-Datei**. The form
+In the backend: open a form without a file and click the export button next to the field **YAML-Datei** (see screenshot above). The form
 is written to the site folder (file name derived from the title, `-2`, `-3` … on collisions) and linked.
 
 On the command line, also for versioned files inside an extension:

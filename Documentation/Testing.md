@@ -82,3 +82,12 @@ single worker.
 |---|---|---|---|
 | 13.4 | 13.3 | 8.2 | unit and E2E green |
 | 13.4 | 13.3 | 8.5 | unit and E2E green |
+
+## Regenerating the documentation screenshots
+
+```bash
+cd Tests/E2E
+E2E_SCREENSHOTS=1 E2E_PROJECT_ROOT=<ddev-project> npx playwright test screenshots
+```
+
+The images are written to `Documentation/Images/`.
